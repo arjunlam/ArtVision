@@ -43,9 +43,9 @@ OBJECTS_DIR   = release
 
 ####### Files
 
-SOURCES       = ..\main.cpp \
-		..\imageviewer.cpp \
-		..\imageviewerwidget.cpp release\moc_imageviewer.cpp \
+SOURCES       = ..\src\main.cpp \
+		..\src\imageviewer.cpp \
+		..\src\imageviewerwidget.cpp release\moc_imageviewer.cpp \
 		release\moc_imageviewerwidget.cpp
 OBJECTS       = release\main.obj \
 		release\imageviewer.obj \
@@ -53,10 +53,11 @@ OBJECTS       = release\main.obj \
 		release\moc_imageviewer.obj \
 		release\moc_imageviewerwidget.obj
 
-DIST          =  ..\imageviewer.h \
-		..\imageviewerwidget.h ..\main.cpp \
-		..\imageviewer.cpp \
-		..\imageviewerwidget.cpp
+DIST          = website/styles.css \
+		website/index.html ..\src\imageviewer.h \
+		..\src\imageviewerwidget.h ..\src\main.cpp \
+		..\src\imageviewer.cpp \
+		..\src\imageviewerwidget.cpp
 QMAKE_TARGET  = ArtVision
 DESTDIR        = release\ #avoid trailing-slash linebreak
 TARGET         = ArtVision.exe
@@ -66,22 +67,22 @@ DESTDIR_TARGET = release\ArtVision.exe
 
 .SUFFIXES: .c .cpp .cc .cxx
 
-{..}.cpp{release\}.obj::
+{..\src}.cpp{release\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
 	$<
 <<
 
-{..}.cc{release\}.obj::
+{..\src}.cc{release\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
 	$<
 <<
 
-{..}.cxx{release\}.obj::
+{..\src}.cxx{release\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
 	$<
 <<
 
-{..}.c{release\}.obj::
+{..\src}.c{release\}.obj::
 	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
 	$<
 <<
@@ -307,8 +308,8 @@ release\moc_imageviewer.cpp: C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore
 		"C:\Program Files (x86)\opencv\build\include\opencv2\core\core_c.h" \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\core\types_c.h" \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\core\optim.hpp" \
-		..\imageviewer.h
-	C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/mkspecs/win32-msvc2013 -I"C:/Users/tester/Documents/BU/Fall 2016/CS 585/Project/ArtVision" -I"C:/Program Files (x86)/opencv/build/include" -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtWidgets -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtGui -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtCore -I. ..\imageviewer.h -o release\moc_imageviewer.cpp
+		..\src\imageviewer.h
+	C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/mkspecs/win32-msvc2013 -I"C:/Users/tester/Documents/BU/Fall 2016/CS 585/Project/ArtVision" -I"C:/Program Files (x86)/opencv/build/include" -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtWidgets -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtGui -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtCore -I. ..\src\imageviewer.h -o release\moc_imageviewer.cpp
 
 release\moc_imageviewerwidget.cpp: C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QWidget \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qwidget.h \
@@ -413,17 +414,16 @@ release\moc_imageviewerwidget.cpp: C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qvector2d.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qtouchdevice.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\QString \
-		..\imageviewerwidget.h
-	C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/mkspecs/win32-msvc2013 -I"C:/Users/tester/Documents/BU/Fall 2016/CS 585/Project/ArtVision" -I"C:/Program Files (x86)/opencv/build/include" -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtWidgets -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtGui -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtCore -I. ..\imageviewerwidget.h -o release\moc_imageviewerwidget.cpp
+		..\src\imageviewerwidget.h
+	C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/mkspecs/win32-msvc2013 -I"C:/Users/tester/Documents/BU/Fall 2016/CS 585/Project/ArtVision" -I"C:/Program Files (x86)/opencv/build/include" -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtWidgets -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtGui -IC:/Qt/Qt5.4.2/5.4/msvc2013_64_opengl/include/QtCore -I. ..\src\imageviewerwidget.h -o release\moc_imageviewerwidget.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
 compiler_uic_make_all: ui_imageviewerwidget.h
 compiler_uic_clean:
 	-$(DEL_FILE) ui_imageviewerwidget.h
-ui_imageviewerwidget.h: ..\imageviewerwidget.ui \
-		..\imageviewer.h
-	C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\bin\uic.exe ..\imageviewerwidget.ui -o ui_imageviewerwidget.h
+ui_imageviewerwidget.h: ..\src\imageviewerwidget.ui
+	C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\bin\uic.exe ..\src\imageviewerwidget.ui -o ui_imageviewerwidget.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -437,7 +437,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 
 ####### Compile
 
-release\main.obj: ..\main.cpp C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QApplication \
+release\main.obj: ..\src\main.cpp C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QApplication \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qapplication.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\qcoreapplication.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\qglobal.h \
@@ -545,11 +545,11 @@ release\main.obj: ..\main.cpp C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWid
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qtouchdevice.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qguiapplication.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qinputmethod.h \
-		..\imageviewerwidget.h \
+		..\src\imageviewerwidget.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QWidget \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\QString
 
-release\imageviewer.obj: ..\imageviewer.cpp ..\imageviewer.h \
+release\imageviewer.obj: ..\src\imageviewer.cpp ..\src\imageviewer.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\QSize \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\qsize.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\qnamespace.h \
@@ -722,7 +722,7 @@ release\imageviewer.obj: ..\imageviewer.cpp ..\imageviewer.h \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\videoio\videoio_c.h" \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\ml.hpp"
 
-release\imageviewerwidget.obj: ..\imageviewerwidget.cpp ..\imageviewerwidget.h \
+release\imageviewerwidget.obj: ..\src\imageviewerwidget.cpp ..\src\imageviewerwidget.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QWidget \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qwidget.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qwindowdefs.h \
@@ -870,13 +870,6 @@ release\imageviewerwidget.obj: ..\imageviewerwidget.cpp ..\imageviewerwidget.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qtextformat.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qpen.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qtextoption.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QPushButton \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qpushbutton.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qabstractbutton.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QSpacerItem \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QVBoxLayout \
-		..\imageviewer.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\QSize \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QOpenGLWidget \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qopenglwidget.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\QSurfaceFormat \
@@ -885,13 +878,17 @@ release\imageviewerwidget.obj: ..\imageviewerwidget.cpp ..\imageviewerwidget.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\qt_windows.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qopengles2ext.h \
 		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qopenglext.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\QOpenGLFunctions_2_0 \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qopenglfunctions_2_0.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\QOpenGLVersionFunctions \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qopenglversionfunctions.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtGui\qopenglcontext.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\QObject \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\QScopedPointer \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QPushButton \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qpushbutton.h \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qabstractbutton.h \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QSpacerItem \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QVBoxLayout \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QFileDialog \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qfiledialog.h \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\qdir.h \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\qfileinfo.h \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qdialog.h \
+		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\QFileInfo \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\core\core.hpp" \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\core.hpp" \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\core\cvdef.h" \
@@ -916,12 +913,6 @@ release\imageviewerwidget.obj: ..\imageviewerwidget.cpp ..\imageviewerwidget.h \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\core\core_c.h" \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\core\types_c.h" \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\core\optim.hpp" \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\QFileDialog \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qfiledialog.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\qdir.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\qfileinfo.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtWidgets\qdialog.h \
-		C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl\include\QtCore\QFileInfo \
 		"C:\Program Files (x86)\opencv\build\include\opencv2\imgcodecs.hpp"
 
 release\moc_imageviewer.obj: release\moc_imageviewer.cpp 

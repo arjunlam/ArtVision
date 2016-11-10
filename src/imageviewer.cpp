@@ -10,12 +10,12 @@ ImageViewer::ImageViewer(QWidget *parent) : QOpenGLWidget(parent) {
 ImageViewer::~ImageViewer() {
 }
 
-
+#include <QDebug>
 void ImageViewer::setImage(const cv::Mat &image) {
     if (image.channels() == 3) {
         cvtColor(image, mOrigImage, CV_BGR2RGBA);
     }
-    else if (mOrigImage.channels() == 1) {
+    else if (image.channels() == 1) {
         cvtColor(image, mOrigImage, CV_GRAY2RGBA);
     }
     else return;
@@ -61,9 +61,10 @@ void ImageViewer::resizeGL(int width, int height) {
     updateScene();
 }
 
-
 void ImageViewer::updateScene() {
-    if (this->isVisible()) update();
+    if (this->isVisible()) {
+        update();
+    }
 }
 
 

@@ -1,11 +1,10 @@
 #include "imageviewerwidget.h"
 #include "ui_imageviewerwidget.h"
+#include "imageviewer.h"
 
 #include <QFileDialog>
 #include <QFileInfo>
-
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgcodecs.hpp>
+#include <QDebug>
 
 ImageViewerWidget::ImageViewerWidget(QWidget *parent) :
     QWidget(parent),
@@ -15,10 +14,43 @@ ImageViewerWidget::ImageViewerWidget(QWidget *parent) :
 
     connect(ui->loadButton, &QPushButton::clicked,
             this, &ImageViewerWidget::onLoadButtonClicked);
+
+    connect(this, &ImageViewerWidget::messageSetSourceImage,
+            ui->imageViewer, &ImageViewer::setImage);
+    connect(this, &ImageViewerWidget::messageSetEdgeImage,
+            ui->edgeViewer, &ImageViewer::setImage);
+    connect(this, &ImageViewerWidget::messageSetIntersectionImage,
+            ui->intersectionViewer, &ImageViewer::setImage);
+
+    connect(ui->blurKernalSlider, &QSlider::valueChanged,
+            [&](int) {calculateEdges();});
+    connect(ui->kernalSizeSlider, &QSlider::valueChanged,
+            [&](int) {calculateEdges();});
+    connect(ui->lowThresholdSlider, &QSlider::valueChanged,
+            [&](int) {calculateEdges();});
+    connect(ui->ratioSlider, &QSlider::valueChanged,
+            [&](int) {calculateEdges();});
 }
 
 ImageViewerWidget::~ImageViewerWidget() {
     delete ui;
+}
+
+void ImageViewerWidget::calculateEdges() {
+    if (source.empty()) return;
+
+    int lowThreshold = 1 + 2 * ui->lowThresholdSlider->value();
+    int blurKernal = 1 + 2 * ui->blurKernalSlider->value();
+    int kernalSize = 1 + 2 * ui->kernalSizeSlider->value();
+    int ratio = 1 + 2 * ui->ratioSlider->value();
+
+    cv::Mat greyscale;
+    cv::cvtColor(source, greyscale, CV_BGR2GRAY);
+
+    cv::blur(greyscale, edges, cv::Size(blurKernal, blurKernal));
+    cv::Canny(edges, edges, lowThreshold, lowThreshold * ratio, kernalSize);
+
+    emit messageSetEdgeImage(edges);
 }
 
 void ImageViewerWidget::onLoadButtonClicked() {
@@ -27,7 +59,10 @@ void ImageViewerWidget::onLoadButtonClicked() {
     } else {
         ui->pathLineEdit->setText(filename);
         imageDirectory = QFileInfo(filename).path();
-        cv::Mat image = cv::imread(filename.toStdString(), cv::IMREAD_COLOR);
-        ui->imageViewer->setImage(image);
+        source = cv::imread(filename.toStdString(), cv::IMREAD_COLOR);
+
+        emit messageSetSourceImage(source);
+
+        calculateEdges();
     }
 }
