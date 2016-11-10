@@ -13,13 +13,17 @@ TEMPLATE = app
 
 include(opencv.pri)
 
-SOURCES += main.cpp \
-    imageviewer.cpp \
-    imageviewerwidget.cpp
+SOURCES += src/main.cpp \
+    src/imageviewer.cpp \
+    src/imageviewerwidget.cpp
 
 HEADERS  += \
-    imageviewer.h \
-    imageviewerwidget.h
+    src/imageviewer.h \
+    src/imageviewerwidget.h
 
 FORMS    += \
-    imageviewerwidget.ui
+    src/imageviewerwidget.ui
+
+DISTFILES += \
+    website/styles.css \
+    website/index.html
