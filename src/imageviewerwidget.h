@@ -1,18 +1,12 @@
 #ifndef IMAGEVIEWERWIDGET_H
 #define IMAGEVIEWERWIDGET_H
 
-#include <QWidget>
-#include <QString>
-
-#include "opencv2/imgproc/imgproc.hpp"
+#include <QSize>
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions_2_0>
 #include <opencv2/core/core.hpp>
-#include <opencv2/imgcodecs.hpp>
 
-namespace Ui {
-class ImageViewerWidget;
-}
-
-class ImageViewerWidget : public QWidget
+class ImageViewerWidget : public QOpenGLWidget, protected QOpenGLFunctions_2_0
 {
     Q_OBJECT
 
@@ -20,24 +14,24 @@ public:
     explicit ImageViewerWidget(QWidget *parent = nullptr);
     ~ImageViewerWidget();
 
-    void calculateEdges();
-
 public slots:
-    void onLoadButtonClicked();
+    void onSetImage(const cv::Mat &image, GLenum minFilter, GLenum magFilter, GLenum wrapFilter);
+    void onClearImage();
 
-signals:
-    void messageSetSourceImage(const cv::Mat &image);
-    void messageSetEdgeImage(const cv::Mat &image);
-    void messageSetIntersectionImage(const cv::Mat &image);
-
-    // MEMBERS
+    // METHODS
 protected:
-    Ui::ImageViewerWidget *ui;
-    QString imageDirectory;
+    void initializeGL();
 
-    cv::Mat source;
-    cv::Mat edges;
-    cv::Mat intersections;
+    void paintGL();
+
+    void resizeGL(int width, int height);
+
+protected:
+    GLuint texture;
+    GLuint textureHeight;
+    GLuint textureWidth;
+    GLfloat textureWidthRatio;
+    GLfloat textureHeightRatio;
 };
 
 #endif // IMAGEVIEWERWIDGET_H

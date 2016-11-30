@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'imageviewerwidget.ui'
+** Form generated from reading UI file 'edgedetectionwidget.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.4.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef UI_IMAGEVIEWERWIDGET_H
-#define UI_IMAGEVIEWERWIDGET_H
+#ifndef UI_EDGEDETECTIONWIDGET_H
+#define UI_EDGEDETECTIONWIDGET_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -22,18 +22,18 @@
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include "imageviewer.h"
+#include "src/imageviewerwidget.h"
 
 QT_BEGIN_NAMESPACE
 
-class Ui_ImageViewerWidget
+class Ui_EdgeDetectionWidget
 {
 public:
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_2;
-    ImageViewer *imageViewer;
-    ImageViewer *edgeViewer;
-    ImageViewer *intersectionViewer;
+    ImageViewerWidget *imageViewer;
+    ImageViewerWidget *edgeViewer;
+    ImageViewerWidget *intersectionViewer;
     QFormLayout *formLayout;
     QLabel *kernalSizeLabel;
     QSlider *kernalSizeSlider;
@@ -46,27 +46,27 @@ public:
     QLabel *blurKernalLabel;
     QSlider *blurKernalSlider;
 
-    void setupUi(QWidget *ImageViewerWidget)
+    void setupUi(QWidget *EdgeDetectionWidget)
     {
-        if (ImageViewerWidget->objectName().isEmpty())
-            ImageViewerWidget->setObjectName(QStringLiteral("ImageViewerWidget"));
-        ImageViewerWidget->resize(580, 322);
-        verticalLayout = new QVBoxLayout(ImageViewerWidget);
+        if (EdgeDetectionWidget->objectName().isEmpty())
+            EdgeDetectionWidget->setObjectName(QStringLiteral("EdgeDetectionWidget"));
+        EdgeDetectionWidget->resize(580, 322);
+        verticalLayout = new QVBoxLayout(EdgeDetectionWidget);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        imageViewer = new ImageViewer(ImageViewerWidget);
+        imageViewer = new ImageViewerWidget(EdgeDetectionWidget);
         imageViewer->setObjectName(QStringLiteral("imageViewer"));
         imageViewer->setMinimumSize(QSize(0, 0));
 
         horizontalLayout_2->addWidget(imageViewer);
 
-        edgeViewer = new ImageViewer(ImageViewerWidget);
+        edgeViewer = new ImageViewerWidget(EdgeDetectionWidget);
         edgeViewer->setObjectName(QStringLiteral("edgeViewer"));
 
         horizontalLayout_2->addWidget(edgeViewer);
 
-        intersectionViewer = new ImageViewer(ImageViewerWidget);
+        intersectionViewer = new ImageViewerWidget(EdgeDetectionWidget);
         intersectionViewer->setObjectName(QStringLiteral("intersectionViewer"));
 
         horizontalLayout_2->addWidget(intersectionViewer);
@@ -76,12 +76,12 @@ public:
 
         formLayout = new QFormLayout();
         formLayout->setObjectName(QStringLiteral("formLayout"));
-        kernalSizeLabel = new QLabel(ImageViewerWidget);
+        kernalSizeLabel = new QLabel(EdgeDetectionWidget);
         kernalSizeLabel->setObjectName(QStringLiteral("kernalSizeLabel"));
 
         formLayout->setWidget(2, QFormLayout::LabelRole, kernalSizeLabel);
 
-        kernalSizeSlider = new QSlider(ImageViewerWidget);
+        kernalSizeSlider = new QSlider(EdgeDetectionWidget);
         kernalSizeSlider->setObjectName(QStringLiteral("kernalSizeSlider"));
         kernalSizeSlider->setMinimum(1);
         kernalSizeSlider->setMaximum(3);
@@ -90,12 +90,12 @@ public:
 
         formLayout->setWidget(2, QFormLayout::FieldRole, kernalSizeSlider);
 
-        ratioLabel = new QLabel(ImageViewerWidget);
+        ratioLabel = new QLabel(EdgeDetectionWidget);
         ratioLabel->setObjectName(QStringLiteral("ratioLabel"));
 
         formLayout->setWidget(3, QFormLayout::LabelRole, ratioLabel);
 
-        ratioSlider = new QSlider(ImageViewerWidget);
+        ratioSlider = new QSlider(EdgeDetectionWidget);
         ratioSlider->setObjectName(QStringLiteral("ratioSlider"));
         ratioSlider->setMinimum(0);
         ratioSlider->setMaximum(100);
@@ -104,12 +104,12 @@ public:
 
         formLayout->setWidget(3, QFormLayout::FieldRole, ratioSlider);
 
-        lowThresholdLabel = new QLabel(ImageViewerWidget);
+        lowThresholdLabel = new QLabel(EdgeDetectionWidget);
         lowThresholdLabel->setObjectName(QStringLiteral("lowThresholdLabel"));
 
         formLayout->setWidget(4, QFormLayout::LabelRole, lowThresholdLabel);
 
-        lowThresholdSlider = new QSlider(ImageViewerWidget);
+        lowThresholdSlider = new QSlider(EdgeDetectionWidget);
         lowThresholdSlider->setObjectName(QStringLiteral("lowThresholdSlider"));
         lowThresholdSlider->setMinimum(0);
         lowThresholdSlider->setMaximum(100);
@@ -118,23 +118,23 @@ public:
 
         formLayout->setWidget(4, QFormLayout::FieldRole, lowThresholdSlider);
 
-        loadButton = new QPushButton(ImageViewerWidget);
+        loadButton = new QPushButton(EdgeDetectionWidget);
         loadButton->setObjectName(QStringLiteral("loadButton"));
 
         formLayout->setWidget(5, QFormLayout::LabelRole, loadButton);
 
-        pathLineEdit = new QLineEdit(ImageViewerWidget);
+        pathLineEdit = new QLineEdit(EdgeDetectionWidget);
         pathLineEdit->setObjectName(QStringLiteral("pathLineEdit"));
         pathLineEdit->setEnabled(false);
 
         formLayout->setWidget(5, QFormLayout::FieldRole, pathLineEdit);
 
-        blurKernalLabel = new QLabel(ImageViewerWidget);
+        blurKernalLabel = new QLabel(EdgeDetectionWidget);
         blurKernalLabel->setObjectName(QStringLiteral("blurKernalLabel"));
 
         formLayout->setWidget(1, QFormLayout::LabelRole, blurKernalLabel);
 
-        blurKernalSlider = new QSlider(ImageViewerWidget);
+        blurKernalSlider = new QSlider(EdgeDetectionWidget);
         blurKernalSlider->setObjectName(QStringLiteral("blurKernalSlider"));
         blurKernalSlider->setMinimum(0);
         blurKernalSlider->setOrientation(Qt::Horizontal);
@@ -145,27 +145,27 @@ public:
         verticalLayout->addLayout(formLayout);
 
 
-        retranslateUi(ImageViewerWidget);
+        retranslateUi(EdgeDetectionWidget);
 
-        QMetaObject::connectSlotsByName(ImageViewerWidget);
+        QMetaObject::connectSlotsByName(EdgeDetectionWidget);
     } // setupUi
 
-    void retranslateUi(QWidget *ImageViewerWidget)
+    void retranslateUi(QWidget *EdgeDetectionWidget)
     {
-        ImageViewerWidget->setWindowTitle(QApplication::translate("ImageViewerWidget", "Image Viewer", 0));
-        kernalSizeLabel->setText(QApplication::translate("ImageViewerWidget", "Kernal Size", 0));
-        ratioLabel->setText(QApplication::translate("ImageViewerWidget", "Ratio", 0));
-        lowThresholdLabel->setText(QApplication::translate("ImageViewerWidget", "Low Threshold", 0));
-        loadButton->setText(QApplication::translate("ImageViewerWidget", "Load", 0));
-        blurKernalLabel->setText(QApplication::translate("ImageViewerWidget", "Blur Kernal", 0));
+        EdgeDetectionWidget->setWindowTitle(QApplication::translate("EdgeDetectionWidget", "Image Viewer", 0));
+        kernalSizeLabel->setText(QApplication::translate("EdgeDetectionWidget", "Kernal Size", 0));
+        ratioLabel->setText(QApplication::translate("EdgeDetectionWidget", "Ratio", 0));
+        lowThresholdLabel->setText(QApplication::translate("EdgeDetectionWidget", "Low Threshold", 0));
+        loadButton->setText(QApplication::translate("EdgeDetectionWidget", "Load", 0));
+        blurKernalLabel->setText(QApplication::translate("EdgeDetectionWidget", "Blur Kernal", 0));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class ImageViewerWidget: public Ui_ImageViewerWidget {};
+    class EdgeDetectionWidget: public Ui_EdgeDetectionWidget {};
 } // namespace Ui
 
 QT_END_NAMESPACE
 
-#endif // UI_IMAGEVIEWERWIDGET_H
+#endif // UI_EDGEDETECTIONWIDGET_H
