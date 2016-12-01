@@ -50,16 +50,16 @@ void EdgeDetectionWidget::calculateEdges() {
     cv::Canny(edges, edges, lowThreshold, lowThreshold * ratio, kernalSize);
 
 
-    std::vector<cv::Vec4i> lines;
-    lines.reserve(5000);
-    cv::HoughLinesP(edges, lines, 1, CV_PI/180, 50, 50, 10);
+//    std::vector<cv::Vec4i> lines;
+//    lines.reserve(5000);
+//    cv::HoughLinesP(edges, lines, 1, CV_PI/180, 50, 50, 10);
 
-    cv::Mat temp_edge = cv::Mat::zeros(edges.size(), CV_8UC1);
-    foreach (auto line, lines) {
-        cv::line(temp_edge, cv::Point(line[0], line[1]), cv::Point(line[2], line[3]), cv::Scalar(255), 1, CV_AA);
-    }
+//    cv::Mat temp_edge = cv::Mat::zeros(edges.size(), CV_8UC1);
+//    foreach (auto line, lines) {
+//        cv::line(temp_edge, cv::Point(line[0], line[1]), cv::Point(line[2], line[3]), cv::Scalar(255), 1, CV_AA);
+//    }
 
-    edges = temp_edge.clone();
+//    edges = temp_edge.clone();
     emit messageSetEdgeImage(edges, GL_LINEAR, GL_LINEAR, GL_CLAMP);
 
 }
