@@ -1,5 +1,7 @@
 #include "edgedetectionwidget.h"
 #include "ui_edgedetectionwidget.h"
+#include "core.h"
+#include "grounddetection.h"
 
 #include <QFileDialog>
 #include <QFileInfo>
@@ -36,6 +38,7 @@ EdgeDetectionWidget::~EdgeDetectionWidget() {
 }
 
 #include "core.h"
+#include "grounddetection.h"
 
 void EdgeDetectionWidget::calculateEdges() {
     if (source_image.empty()) return;

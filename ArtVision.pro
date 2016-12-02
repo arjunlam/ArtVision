@@ -22,7 +22,8 @@ HEADERS  += \
     src/imageviewerwidget.h \
     src/edgedetectionwidget.h \
     src/imageviewerwidget.h \
-    src/core.h
+    src/core.h \
+    src/grounddetection.h
 
 FORMS    += \
     src/edgedetectionwidget.ui
