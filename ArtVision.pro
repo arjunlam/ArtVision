@@ -21,7 +21,8 @@ SOURCES += src/main.cpp \
 HEADERS  += \
     src/imageviewerwidget.h \
     src/edgedetectionwidget.h \
-    src/imageviewerwidget.h
+    src/imageviewerwidget.h \
+    src/core.h
 
 FORMS    += \
     src/edgedetectionwidget.ui

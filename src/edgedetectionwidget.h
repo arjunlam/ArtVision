@@ -37,9 +37,9 @@ protected:
     Ui::EdgeDetectionWidget *ui;
     QString imageDirectory;
 
-    cv::Mat source;
-    cv::Mat edges;
-    cv::Mat intersections;
+    cv::Mat source_image;
+    cv::Mat edge_image;
+    cv::Mat intersection_image;
 };
 
 #endif // EDGEDETECTIONWIDGET_H
