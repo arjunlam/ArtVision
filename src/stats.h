@@ -2,6 +2,7 @@
 #define STATS
 
 #include <vector>
+#include <QDebug>
 
 void normal_distribution(const std::vector<float> &data, float &mean, float &stdev) {
     const float N = static_cast<float>(data.size());
@@ -29,8 +30,7 @@ void zfilter(const std::vector<float> &data, float mean, float stdev, float alph
 
     for (int i = 0; i < N; ++i) {
         const float zscore = abs((data[i] - mean) / stdev);
-        const float p = erf(zscore);
-        if (p < alpha) {
+        if (zscore < alpha) {
             keep.push_back(i);
         }
     }

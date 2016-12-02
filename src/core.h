@@ -8,6 +8,8 @@
 
 #include "stats.h"
 
+#include <QDebug>
+
 void calculate_intersections(const std::vector<cv::Vec4i> &lines, std::vector<cv::Vec2f> &intersections) {
     const size_t N = lines.size();
 
@@ -26,13 +28,13 @@ void calculate_intersections(const std::vector<cv::Vec4i> &lines, std::vector<cv
             const float bj = -mj * lj[0] + lj[1];
 
             if (std::abs(mi) < 5 && std::abs(mi) > 0.2 && std::abs(mj) < 5 && std::abs(mj) > 0.2){
+                const float x = (bi - bj) / (mj - mi);
+                const float y = mi * x + bi;
 
-            const float x = (bi - bj) / (mj - mi);
-            const float y = mi * x + bi;
-
-            const cv::Vec2f point(x, y);
-
-            intersections.push_back(point);
+                if (!isnan(x) && isfinite(x) && !isnan(y) && isfinite(y)) {
+                    const cv::Vec2f point(x, y);
+                    intersections.push_back(point);
+                }
             }
         }
     }
@@ -50,10 +52,11 @@ void visualize_intersections(const std::vector<cv::Vec2f> &intersections, cv::Ma
         }
     }
 
-    cv::dilate(image, image, cv::getStructuringElement(cv::MORPH_ELLIPSE,cv::Size( 15, 15 ), cv::Point(7, 7)));
+    // KEEP LARGE
+    cv::dilate(image, image, cv::getStructuringElement(cv::MORPH_ELLIPSE,cv::Size(15, 15), cv::Point(7, 7)));
 }
 
-void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::Vec2f vanishing_point, size_t iters, float alpha) {
+void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::Vec2f &vanishing_point, size_t iters, float alpha) {
 
     const size_t N = intersections.size();
 
@@ -78,7 +81,7 @@ void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::
 
         for (auto intersection : regressed_intersections) {
             const cv::Vec2f displacement = intersection - representative;
-            sqr_distances.push_back(displacement[0]*displacement[0] + displacement[1]*displacement[1]);
+            sqr_distances.push_back(sqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1]));
         }
 
         float mean, stdev;
@@ -87,10 +90,10 @@ void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::
         std::vector<int> keep;
         zfilter(sqr_distances, mean, stdev, alpha, keep);
 
-        std::vector<cv::Vec2f> temp_regressed_intersections;
-        temp_regressed_intersections.reserve(static_cast<size_t>(alpha * Nr));
+        const size_t Nt = keep.size();
 
-        const size_t Nt = temp_regressed_intersections.size();
+        std::vector<cv::Vec2f> temp_regressed_intersections;
+        temp_regressed_intersections.reserve(Nt);
 
         for (int i = 0; i < Nt; ++i) {
             temp_regressed_intersections.push_back(regressed_intersections[keep[i]]);
