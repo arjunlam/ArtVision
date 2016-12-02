@@ -73,7 +73,7 @@ void EdgeDetectionWidget::calculateEdges() {
     visualize_intersections<uchar>(intersections, intersection_image);
 
     cv::Vec2f vanishing_point;
-    calculate_vanishing_point(intersections,vanishing_point, 3);
+    calculate_vanishing_point(intersections,vanishing_point, 3, 0.9f);
 
     qDebug() << vanishing_point[0] << "," << vanishing_point[1];
 

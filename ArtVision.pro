@@ -23,6 +23,7 @@ HEADERS  += \
     src/edgedetectionwidget.h \
     src/imageviewerwidget.h \
     src/core.h \
+    src/stats.h \
     src/grounddetection.h
 
 FORMS    += \

@@ -6,6 +6,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+#include "stats.h"
+
 void calculate_intersections(const std::vector<cv::Vec4i> &lines, std::vector<cv::Vec2f> &intersections) {
     const size_t N = lines.size();
 
@@ -51,7 +53,7 @@ void visualize_intersections(const std::vector<cv::Vec2f> &intersections, cv::Ma
     cv::dilate(image, image, cv::getStructuringElement(cv::MORPH_ELLIPSE,cv::Size( 15, 15 ), cv::Point(7, 7)));
 }
 
-void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::Vec2f vanishing_point, size_t iters) {
+void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::Vec2f vanishing_point, size_t iters, float alpha) {
 
     const size_t N = intersections.size();
 
@@ -59,48 +61,46 @@ void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::
     regressed_intersections.resize(N);
     std::copy(intersections.begin(), intersections.end(), regressed_intersections.begin());
 
-    cv::Vec2f mean;
-    cv::Vec2f stdev;
+    cv::Vec2f representative;
 
     for (size_t t = 0; t < iters; ++t) {
         const size_t Nr = regressed_intersections.size();
 
-        mean = cv::Vec2f(0,0);
-        stdev = cv::Vec2f(0,0);
+        representative = cv::Vec2f(0,0);
+        for (auto intersection : regressed_intersections) {
+            representative += intersection;
+        }
+
+        representative /= static_cast<float>(Nr);
+
+        std::vector<float> sqr_distances;
+        sqr_distances.reserve(Nr);
 
         for (auto intersection : regressed_intersections) {
-            mean += intersection;
+            const cv::Vec2f displacement = intersection - representative;
+            sqr_distances.push_back(displacement[0]*displacement[0] + displacement[1]*displacement[1]);
         }
-        mean = mean / static_cast<float>(Nr);
 
-        for (auto intersection : regressed_intersections) {
-            const cv::Vec2f u = mean - intersection;
-            stdev[0] += u[0] * u[0];
-            stdev[1] += u[1] * u[1];
-        }
-        stdev[0] = sqrtf(stdev[0] / N);
-        stdev[1] = sqrtf(stdev[1] / N);
+        float mean, stdev;
+        normal_distribution(sqr_distances, mean, stdev);
+
+        std::vector<int> keep;
+        zfilter(sqr_distances, mean, stdev, alpha, keep);
 
         std::vector<cv::Vec2f> temp_regressed_intersections;
-        temp_regressed_intersections.reserve(9 * Nr / 10);
+        temp_regressed_intersections.reserve(static_cast<size_t>(alpha * Nr));
 
-        for (auto intersection : regressed_intersections) {
-            cv::Vec2f z = intersection - mean;
-            z[0] = abs(z[0] / stdev[0]);
-            z[1] = abs(z[1] / stdev[1]);
+        const size_t Nt = temp_regressed_intersections.size();
 
-            const float u = 0.5f * erf(z[0]);
-            const float v = 0.5f * erf(z[1]);
-
-            if (u < 0.9f && v < 0.9f) {
-                temp_regressed_intersections.push_back(intersection);
-            }
+        for (int i = 0; i < Nt; ++i) {
+            temp_regressed_intersections.push_back(regressed_intersections[keep[i]]);
         }
 
-        regressed_intersections = temp_regressed_intersections;
+        regressed_intersections.resize(Nt);
+        std::copy(temp_regressed_intersections.begin(), temp_regressed_intersections.end(), regressed_intersections.begin());
     }
 
-    vanishing_point = mean;
+    vanishing_point = representative;
 }
 
 void ground_detection(cv::Vec2f &vanishing_point,const std::vector<cv::Vec4i> &lines, std::vector<cv::Vec2i> key_points ){

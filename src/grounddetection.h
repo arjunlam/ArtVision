@@ -12,7 +12,7 @@
 void ground_detection1(cv::Vec2f &vanishing_point,const std::vector<cv::Vec4i> &lines, std::vector<cv::Vec2i> key_points ){
     int N = lines.size();
 
-    key_points.clear;
+    key_points.clear();
 
     std::vector<cv::Vec2f> intersections;
     intersections.reserve((N * N) / 2);
@@ -31,14 +31,9 @@ void ground_detection1(cv::Vec2f &vanishing_point,const std::vector<cv::Vec4i> &
 
         float distance = std::abs(((y2-y1)*x0 - (x2-x1)*y0 + x2*y1 - y2*x1) / std::sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)));
         if(distance > 20){
-            detection_lines.push(line);
+            detection_lines.push_back(line);
         }
-
-
-
     }
-
-
 }
 
 #endif // GROUNDDETECTION_H
