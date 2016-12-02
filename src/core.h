@@ -23,12 +23,15 @@ void calculate_intersections(const std::vector<cv::Vec4i> &lines, std::vector<cv
             const float mj = static_cast<float>(lj[3] - lj[1]) / static_cast<float>(lj[2] - lj[0]);
             const float bj = -mj * lj[0] + lj[1];
 
+            if (std::abs(mi) < 5 && std::abs(mi) > 0.2 && std::abs(mj) < 5 && std::abs(mj) > 0.2){
+
             const float x = (bi - bj) / (mj - mi);
             const float y = mi * x + bi;
 
             const cv::Vec2f point(x, y);
 
             intersections.push_back(point);
+            }
         }
     }
 }
@@ -41,7 +44,7 @@ void visualize_intersections(const std::vector<cv::Vec2f> &intersections, cv::Ma
         const int x = static_cast<int>(intersection[0]);
         const int y = static_cast<int>(intersection[1]);
         if (x > 0 && x < image.cols && y > 0 && y < image.rows) {
-            image.at<PixelT>(y, x) += 1;
+            image.at<PixelT>(y, x) += 10;
         }
     }
 
@@ -98,6 +101,11 @@ void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::
     }
 
     vanishing_point = mean;
+}
+
+void ground_detection(cv::Vec2f &vanishing_point,const std::vector<cv::Vec4i> &lines, std::vector<cv::Vec2i> key_points ){
+
+
 }
 
 #endif // CORE
