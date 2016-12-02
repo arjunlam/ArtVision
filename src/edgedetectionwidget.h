@@ -22,7 +22,7 @@ public:
     explicit EdgeDetectionWidget(QWidget *parent = nullptr);
     ~EdgeDetectionWidget();
 
-    void calculateEdges();
+    void onCalculateEdges();
 
 public slots:
     void onLoadButtonClicked();

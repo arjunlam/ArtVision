@@ -136,6 +136,13 @@
        </property>
       </widget>
      </item>
+     <item row="6" column="0">
+      <widget class="QPushButton" name="calculateEdgesButton">
+       <property name="text">
+        <string>Calculate Edges</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

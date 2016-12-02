@@ -7,6 +7,9 @@
 #include <QFileInfo>
 #include <QDebug>
 
+#include "core.h"
+#include "grounddetection.h"
+
 EdgeDetectionWidget::EdgeDetectionWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EdgeDetectionWidget) {
@@ -22,25 +25,15 @@ EdgeDetectionWidget::EdgeDetectionWidget(QWidget *parent) :
             ui->edgeViewer, &ImageViewerWidget::onSetImage);
     connect(this, &EdgeDetectionWidget::messageSetIntersectionImage,
             ui->intersectionViewer, &ImageViewerWidget::onSetImage);
-
-    connect(ui->blurKernalSlider, &QSlider::valueChanged,
-            [&](int) {calculateEdges();});
-    connect(ui->kernalSizeSlider, &QSlider::valueChanged,
-            [&](int) {calculateEdges();});
-    connect(ui->lowThresholdSlider, &QSlider::valueChanged,
-            [&](int) {calculateEdges();});
-    connect(ui->ratioSlider, &QSlider::valueChanged,
-            [&](int) {calculateEdges();});
+    connect(ui->calculateEdgesButton, &QPushButton::clicked,
+            this, &EdgeDetectionWidget::onCalculateEdges);
 }
 
 EdgeDetectionWidget::~EdgeDetectionWidget() {
     delete ui;
 }
 
-#include "core.h"
-#include "grounddetection.h"
-
-void EdgeDetectionWidget::calculateEdges() {
+void EdgeDetectionWidget::onCalculateEdges() {
     if (source_image.empty()) return;
 
     int lowThreshold = 1 + 2 * ui->lowThresholdSlider->value();
@@ -90,7 +83,5 @@ void EdgeDetectionWidget::onLoadButtonClicked() {
         source_image = cv::imread(filename.toStdString(), cv::IMREAD_COLOR);
 
         emit messageSetSourceImage(source_image, GL_LINEAR, GL_LINEAR, GL_CLAMP);
-
-        calculateEdges();
     }
 }
