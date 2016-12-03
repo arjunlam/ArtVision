@@ -106,9 +106,49 @@ void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::
     vanishing_point = representative;
 }
 
+void calculate_parallel_lines(cv::Vec2f &vanishing_point,const std::vector<cv::Vec4i> &lines, std::vector<cv::Vec4i> &parallel_lines, float min_sim) {
+    const size_t N = lines.size();
+    parallel_lines.clear();
+    parallel_lines.reserve(N);
+
+    for (auto line : lines) {
+        const cv::Vec2f vdis = vanishing_point - cv::Vec2f(line[0], line[1]);
+        const cv::Vec2f vdir = vdis / sqrtf(vdis[0] * vdis[0] + vdis[1] * vdis[1]);
+        const cv::Vec2f ldis = cv::Vec2f(line[2], line[3]) - cv::Vec2f(line[0], line[1]);
+        const cv::Vec2f ldir = ldis / sqrtf(ldis[0] * ldis[0] + ldis[1] * ldis[1]);
+
+        const float u = abs(vdir[0] * ldir[0] + vdir[1] * ldir[1]);
+        if (u > min_sim) {
+            parallel_lines.push_back(line);
+        }
+    }
+}
+
 void ground_detection(cv::Vec2f &vanishing_point,const std::vector<cv::Vec4i> &lines, std::vector<cv::Vec2i> key_points ){
+    int N = lines.size();
 
+    key_points.clear();
 
+    std::vector<cv::Vec2f> intersections;
+    intersections.reserve((N * N) / 2);
+
+    std::vector<cv::Vec4i> detection_lines;
+    detection_lines.reserve(N);
+
+    for(int i = 0; i < N; ++i){
+        const cv::Vec4i &line = lines[i];
+        const float x0 = vanishing_point[0];
+        const float y0 = vanishing_point[1];
+        const float x1 = line{0};
+        const float y1 = line[1];
+        const float x2 = line[2];
+        const float y2 = line[3];
+
+        float distance = std::abs(((y2-y1)*x0 - (x2-x1)*y0 + x2*y1 - y2*x1) / std::sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)));
+        if(distance > 20){
+            detection_lines.push_back(line);
+        }
+    }
 }
 
 #endif // CORE

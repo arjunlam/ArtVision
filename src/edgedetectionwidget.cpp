@@ -1,14 +1,12 @@
 #include "edgedetectionwidget.h"
 #include "ui_edgedetectionwidget.h"
 #include "core.h"
-#include "grounddetection.h"
 
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QDebug>
 
 #include "core.h"
-#include "grounddetection.h"
 
 EdgeDetectionWidget::EdgeDetectionWidget(QWidget *parent) :
     QWidget(parent),
@@ -68,7 +66,13 @@ void EdgeDetectionWidget::onCalculateEdges() {
     cv::Vec2f vanishing_point;
     calculate_vanishing_point(intersections,vanishing_point, 9, 3.0f);
 
-    cv::circle(source_image, cv::Point2i(vanishing_point[0], vanishing_point[1]), 20, cv::Scalar(0, 0, 255), -1);
+    std::vector<cv::Vec4i> parallel_lines;
+    calculate_parallel_lines(vanishing_point, lines, parallel_lines, 0.97f);
+
+    cv::circle(source_image, cv::Point2i(vanishing_point[0], vanishing_point[1]), 0.01f * source_image.rows, cv::Scalar(0, 0, 255), -1);
+    for (auto parallel_line : parallel_lines) {
+        cv::line(source_image, cv::Point(parallel_line[0], parallel_line[1]), cv::Point(parallel_line[2], parallel_line[3]), cv::Scalar(255), 0.005f * source_image.rows, CV_AA);
+    }
 
     emit messageSetSourceImage(source_image, GL_LINEAR, GL_LINEAR, GL_CLAMP);
     emit messageSetIntersectionImage(intersection_image, GL_LINEAR, GL_LINEAR, GL_CLAMP);
