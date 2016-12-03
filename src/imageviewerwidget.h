@@ -26,8 +26,12 @@ protected:
 
     void resizeGL(int width, int height);
 
+    void uploadTexture(const cv::Mat &image, GLenum minFilter, GLenum magFilter, GLenum wrapFilter);
+
 protected:
     GLuint texture;
+    GLuint depth;
+
     GLuint textureHeight;
     GLuint textureWidth;
     GLfloat textureWidthRatio;

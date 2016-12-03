@@ -41,14 +41,14 @@ void calculate_intersections(const std::vector<cv::Vec4i> &lines, std::vector<cv
 }
 
 template <class PixelT>
-void visualize_intersections(const std::vector<cv::Vec2f> &intersections, cv::Mat &image) {
+void visualize_intersections(const std::vector<cv::Vec2f> &intersections, cv::Mat &image, PixelT inc) {
     image = 0;
 
     for (auto intersection : intersections) {
         const int x = static_cast<int>(intersection[0]);
         const int y = static_cast<int>(intersection[1]);
         if (x > 0 && x < image.cols && y > 0 && y < image.rows) {
-            image.at<PixelT>(y, x) += 10;
+            image.at<PixelT>(y, x) += inc;
         }
     }
 
@@ -56,6 +56,7 @@ void visualize_intersections(const std::vector<cv::Vec2f> &intersections, cv::Ma
     cv::dilate(image, image, cv::getStructuringElement(cv::MORPH_ELLIPSE,cv::Size(15, 15), cv::Point(7, 7)));
 }
 
+// TODO REGRESS BY USING
 void calculate_vanishing_point(const std::vector<cv::Vec2f> &intersections, cv::Vec2f &vanishing_point, size_t iters, float alpha) {
 
     const size_t N = intersections.size();
@@ -120,6 +121,42 @@ void calculate_parallel_lines(cv::Vec2f &vanishing_point,const std::vector<cv::V
         const float u = abs(vdir[0] * ldir[0] + vdir[1] * ldir[1]);
         if (u > min_sim) {
             parallel_lines.push_back(line);
+        }
+    }
+}
+
+void calculate_depth(const cv::Size &size, const cv::Vec2f &vanishing_point, const std::vector<cv::Vec4i> &parallel_lines, cv::Mat &depths) {
+    depths = cv::Mat(size, CV_32F);
+
+    for (int r = 0; r < depths.rows; ++r) {
+        float * depth_ptr = depths.ptr<float>(r);
+
+        for (int c = 0; c < depths.cols; ++c) {
+            float &depth = depth_ptr[c];
+
+            cv::Vec4i best_line = parallel_lines[0];
+            float best_error = std::numeric_limits<float>::infinity();
+
+            for (auto line : parallel_lines) {
+                const float m = static_cast<float>(line[3] - line[1]) / static_cast<float>(line[2] - line[0]);
+                const float b = -m * line[0] + line[1];
+                float error = (m * c + b) - r;
+                error *= error;
+
+                if (error < best_error) {
+                    best_line = line;
+                    best_error = error;
+                }
+            }
+
+            const cv::Vec2f ldis = cv::Vec2f(best_line[2], best_line[3]) - cv::Vec2f(best_line[0], best_line[1]);
+            const cv::Vec2f ldir = ldis / sqrtf(ldis[0] * ldis[0] + ldis[1] * ldis[1]);
+
+            const float m = static_cast<float>(best_line[3] - best_line[1]) / static_cast<float>(best_line[2] - best_line[0]);
+            const float b = -m * best_line[0] + best_line[1];
+
+            cv::Vec2f point = cv::Vec2f((r - b) / m, r);
+            depth = abs(ldir[0] *(c - vanishing_point[0]) + ldir[1] * (r - vanishing_point[1]));
         }
     }
 }

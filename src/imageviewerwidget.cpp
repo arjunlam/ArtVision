@@ -13,65 +13,10 @@ ImageViewerWidget::~ImageViewerWidget(){
     onClearImage();
 }
 
-
 void ImageViewerWidget::onSetImage(const cv::Mat &image, GLenum minFilter, GLenum magFilter, GLenum wrapFilter){
     onClearImage();
 
-    textureHeight = image.rows;
-    textureWidth = image.cols;
-
-    textureWidthRatio = static_cast<GLfloat>(textureWidth) / static_cast<GLfloat>(textureHeight);
-    textureHeightRatio = 1.0f / textureWidthRatio;
-
-    textureWidthRatio = (textureWidthRatio > 1.0f) ? 1.0f : textureWidthRatio;
-    textureHeightRatio = (textureHeightRatio > 1.0f) ? 1.0f : textureHeightRatio;
-
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    if (magFilter == GL_LINEAR_MIPMAP_LINEAR  ||
-        magFilter == GL_LINEAR_MIPMAP_NEAREST ||
-        magFilter == GL_NEAREST_MIPMAP_LINEAR ||
-        magFilter == GL_NEAREST_MIPMAP_NEAREST) {
-        magFilter = GL_LINEAR;
-    }
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapFilter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapFilter);
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    switch (image.channels()) {
-    case 1:
-        glTexImage2D(GL_TEXTURE_2D,
-                         0,
-                         GL_RGB,
-                         image.cols,
-                         image.rows,
-                         0,
-                         GL_LUMINANCE,
-                         GL_UNSIGNED_BYTE,
-                         image.ptr());
-        break;
-    case 3:
-        glTexImage2D(GL_TEXTURE_2D,
-                         0,
-                         GL_RGB,
-                         image.cols,
-                         image.rows,
-                         0,
-                         GL_BGR,
-                         GL_UNSIGNED_BYTE,
-                         image.ptr());
-        break;
-    default:
-        qDebug() << "Unhandled texture type";
-        break;
-    }
-
-    glBindTexture(GL_TEXTURE_2D, 0);
+    uploadTexture(image, minFilter, magFilter, wrapFilter);
 
     if (this->isVisible()) {
         update();
@@ -83,6 +28,9 @@ void ImageViewerWidget::onClearImage() {
     makeCurrent();
     if (texture != 0) glDeleteTextures(1, &texture);
     texture = 0;
+
+    if (depth != 0) glDeleteTextures(1, &depth);
+    depth = 0;
 }
 
 
@@ -124,3 +72,82 @@ void ImageViewerWidget::paintGL(){
 
 
 void ImageViewerWidget::resizeGL(int w, int h){}
+
+void ImageViewerWidget::uploadTexture(const cv::Mat &image, GLenum minFilter, GLenum magFilter, GLenum wrapFilter) {
+    textureHeight = image.rows;
+    textureWidth = image.cols;
+
+    textureWidthRatio = static_cast<GLfloat>(textureWidth) / static_cast<GLfloat>(textureHeight);
+    textureHeightRatio = 1.0f / textureWidthRatio;
+
+    textureWidthRatio = (textureWidthRatio > 1.0f) ? 1.0f : textureWidthRatio;
+    textureHeightRatio = (textureHeightRatio > 1.0f) ? 1.0f : textureHeightRatio;
+
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    if (magFilter == GL_LINEAR_MIPMAP_LINEAR  ||
+        magFilter == GL_LINEAR_MIPMAP_NEAREST ||
+        magFilter == GL_NEAREST_MIPMAP_LINEAR ||
+        magFilter == GL_NEAREST_MIPMAP_NEAREST) {
+        magFilter = GL_LINEAR;
+    }
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapFilter);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    switch (image.type()) {
+    case CV_8U:
+        glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         GL_RGB,
+                         image.cols,
+                         image.rows,
+                         0,
+                         GL_LUMINANCE,
+                         GL_UNSIGNED_BYTE,
+                         image.ptr());
+        break;
+    case CV_16U:
+        glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         GL_RGB,
+                         image.cols,
+                         image.rows,
+                         0,
+                         GL_LUMINANCE,
+                         GL_UNSIGNED_SHORT,
+                         image.ptr());
+                     break;
+    case CV_8UC3:
+        glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         GL_RGB,
+                         image.cols,
+                         image.rows,
+                         0,
+                         GL_BGR,
+                         GL_UNSIGNED_BYTE,
+                         image.ptr());
+        break;
+    case CV_32F:
+        glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         GL_RGB,
+                         image.cols,
+                         image.rows,
+                         0,
+                         GL_LUMINANCE,
+                         GL_FLOAT,
+                         image.ptr());
+        break;
+    default:
+        qDebug() << Q_FUNC_INFO << "Unhandled texture type";
+    }
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
