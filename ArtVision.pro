@@ -14,15 +14,19 @@ TEMPLATE = app
 include(opencv.pri)
 
 SOURCES += src/main.cpp \
-    src/imageviewer.cpp \
+    src/imageviewerwidget.cpp \
+    src/edgedetectionwidget.cpp \
     src/imageviewerwidget.cpp
 
 HEADERS  += \
-    src/imageviewer.h \
-    src/imageviewerwidget.h
+    src/imageviewerwidget.h \
+    src/edgedetectionwidget.h \
+    src/imageviewerwidget.h \
+    src/core.h \
+    src/stats.h
 
 FORMS    += \
-    src/imageviewerwidget.ui
+    src/edgedetectionwidget.ui
 
 DISTFILES += \
     website/styles.css \
